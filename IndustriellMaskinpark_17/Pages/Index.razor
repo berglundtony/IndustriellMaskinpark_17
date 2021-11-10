@@ -1,0 +1,28 @@
+﻿@page "/"
+
+<Machines IndustrialMachines="@machinepark" />
+@*<a href="@($"addmachine/")" class="btn btn-dark">Lägg till maskin</a>*@
+<AddMachine Add="AddMachinePark"></AddMachine>
+
+@code{
+    private IndustrialMachines machinepark = new IndustrialMachines();
+
+    protected override async Task OnInitializedAsync()
+    {
+        machinepark = await httpClient.GetFromJsonAsync<IndustrialMachines>("api/maskinpark");
+    }
+
+    private void AddCommando(string text)
+    {
+        if (!string.IsNullOrWhiteSpace(text))
+            machinepark.Machines.Add(new IndustrialMachinepark { Data = text });
+    }
+
+    private async Task AddMachinePark(IndustrialMachinepark model)
+    {
+        var res = await httpClient.PostAsJsonAsync<AddMachineDTO>("api/maskinpark", new AddMachineDTO { MachineName = model.MachineName, Status = model.Status, Data = model.Data });
+        if (model != null && res.IsSuccessStatusCode)
+            machinepark.Machines.Add(new IndustrialMachinepark { MachineId = Guid.NewGuid().ToString("n"), MachineName = model.MachineName, Data = model.Data, Status = model.Status });
+    }
+
+}

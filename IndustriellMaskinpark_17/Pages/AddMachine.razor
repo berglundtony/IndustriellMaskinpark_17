@@ -1,0 +1,67 @@
+﻿@page "/addmachine"
+
+<h3>Lägg till en maskin</h3>
+
+<div class="form-group row">
+    <EditForm Model="@IndustrialMachinepark" OnValidSubmit="@HandleValidSubmit"
+              OnInvalidSubmit="@HandleInvalidSubmit">
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <label for="MachineName" class="col-sm-3">Maskinnamn: </label>
+                <input type="text" id="Data" class="form-control col-sm-8" @bind="@IndustrialMachinepark.MachineName">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="smoker" class=" offset-sm-3">
+                <InputCheckbox id="status" @bind-Value="@IndustrialMachinepark.Status"></InputCheckbox>
+                &nbsp;Online
+            </label>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <label for="MachineName" class="col-sm-3">Data: </label>
+                <input type="text" id="Data" class="form-control col-sm-8" @bind="@IndustrialMachinepark.Data">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary edit-btn">Lägg till maskin</button>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<IndustrialMachinepark> Add { get; set; }
+    [Inject]
+    public IIndustrialMachineParkService IndustrialMachineParkService { get; set; }
+    protected string Message = string.Empty;
+    protected string StatusClass = string.Empty;
+    protected bool Saved;
+
+
+    public IndustrialMachinepark IndustrialMachinepark { get; set; } = new IndustrialMachinepark();
+    ElementReference ReferenceToInputControl;
+
+
+    protected void HandleInvalidSubmit()
+    {
+        StatusClass = "alert-danger";
+        Message = "There are some validation errors. Please try again.";
+    }
+
+    protected async Task HandleValidSubmit()
+    {
+        Saved = false;
+
+        await IndustrialMachineParkService.AddMachine(IndustrialMachinepark);
+        StatusClass = "alert-success";
+        Message = "Maskinen updaterades.";
+        Saved = true;
+    }
+
+    public async Task OnAdddMachine(IndustrialMachinepark IndustrialMachinepark)
+    {
+        if (Add.HasDelegate)
+        {
+            await Add.InvokeAsync(IndustrialMachinepark);
+        }
+    }
+}

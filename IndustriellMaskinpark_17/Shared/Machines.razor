@@ -1,0 +1,65 @@
+﻿<div class="container">
+    <ul id="industrialMachines" class="list-group align-self-sm-stretch mt-4">
+        @foreach (var machine in IndustrialMachines.Machines)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center mb-2">
+                <table>
+                    <tr>
+                        <td style="width:200px;"><b>@machine.MachineName</b></td>
+                        <td style="width:20%;">&nbsp;</td>
+                        <td><b>Status: </b></td>
+                        <td style="width:200px;">
+                            @if (@machine.Status)
+                            {
+                                <span>Online</span>
+                            }
+                            else
+                            {
+                                <span>Offline</span>
+                            }
+                        </td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="width:200px;">
+                            @machine.MachineId
+                        </td>
+                        <td style="width:20%;">&nbsp;</td>
+                        <td>
+                            <b>Data:</b>  
+                        </td>
+                        <td style="width:200px;">@machine.Data</td>
+                        <td style="width:300px;">
+                            @*<a href="@($"sendcommand/{machine.MachineId}")" class="btn btn-dark">Skicka Data kommando</a>*@
+                            <button @onclick="() => SendCommand(machine)" class="btn btn-dark">Skicka Data kommando</button>
+                            @*<SendCommando Add="AddCommando" />*@
+                        </td>
+                    </tr></table>
+            </li>
+        }
+    </ul>
+</div>
+
+@code {
+    [Parameter]
+    public IndustrialMachines IndustrialMachines { get; set; }
+    private IndustrialMachines machinepark = new IndustrialMachines();
+    public string MachineId { get; set; }
+
+    private void AddCommando(string text)
+    {
+        if (!string.IsNullOrWhiteSpace(text))
+            machinepark.Machines.Add(new IndustrialMachinepark { Data = text });
+    }
+
+    private async Task SendCommand(IndustrialMachinepark machine)
+    {
+        machine.Completed = machine.Completed ? false : true;
+        var response = await httpClient.PutAsJsonAsync($"api/maskinpark/{machine.MachineId}", machine);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            machine.Completed = machine.Completed ? false : true;
+        }
+    }
+}

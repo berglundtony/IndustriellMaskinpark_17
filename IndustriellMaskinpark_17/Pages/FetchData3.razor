@@ -1,0 +1,64 @@
+﻿@page "/fetchdata3"
+@inject IIndustrialMachineParkService industrialMachines
+
+<h1>Industriell Maskinpark</h1>
+
+
+@if (machinepark == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Maskinens namn</th>
+                <th>Id</th>
+                <th>Status</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var machine in machinepark.Machines)
+            {
+                <tr>
+                    <td>@machine.MachineName</td>
+                    <td>@machine.MachineId</td>
+                    <td>@machine.Status</td>
+                    <td>@machine.Data</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@code{
+    private IndustrialMachines machinepark = new IndustrialMachines();
+    //private IEnumerable<IndustrialMachinepark> machinepark;
+
+    protected override async Task OnInitializedAsync()
+    {
+        machinepark.Machines = await industrialMachines.GetMachinesAsync();
+        //machinepark = await Http.GetFromJsonAsync<IEnumerable<IndustrialMachinepark>>("sample-data/machinepark.json");
+        //IndustrialMachinepark indObject = JsonConvert.DeserializeObject(machinepark);
+    }
+
+    //private void AddCommando(string text)
+    //{
+    //    if (!string.IsNullOrWhiteSpace(text))
+    //        machinepark.Machines.Add(new IndustrialMachinepark { Data = text });
+    //}
+
+
+    public class IndustrialMachinepark
+    {
+        public String MachineName { get; set; }
+        public String MachineId { get; set; }
+        public bool Status { get; set; }
+        public String Data { get; set; }
+    }
+
+}

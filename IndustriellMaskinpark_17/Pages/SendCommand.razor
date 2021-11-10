@@ -1,0 +1,55 @@
+﻿@page "/sendcommand/{MachineId}"
+
+<div class="form-group row">
+    <EditForm Model="@IndustrialMachinepark" OnValidSubmit="@HandleValidSubmit"
+              OnInvalidSubmit="@HandleInvalidSubmit">
+        <div class="row">
+            <div class="col-sm-12">
+                Data: <input type="text" id="Data" @bind="@Text" placeholder="Skriv data kommando">
+            </div>
+        </div>
+        <button @onclick="OnSendData" class="btn btn-primary edit-btn">Spara kommando</button>
+    </EditForm>
+</div>
+
+
+
+@code {
+    [Parameter]
+    public string MachineId { get; set; }
+    public IndustrialMachinepark IndustrialMachinepark { get; set; } = new IndustrialMachinepark();
+
+    [Inject]
+    public IIndustrialMachineParkService IndustrialMachineParkSevice { get; set; }
+
+    protected string Message = string.Empty;
+    protected string StatusClass = string.Empty;
+    protected bool Saved;
+
+    public EventCallback<string> SendData { get; set; }
+    public string Text { get; set; }
+
+    protected void HandleInvalidSubmit()
+    {
+        StatusClass = "alert-danger";
+        Message = "There are some validation errors. Please try again.";
+    }
+
+    protected async Task HandleValidSubmit()
+    {
+        Saved = false;
+
+        //await IndustrialMachineParkSevice.UpdateMachine(IndustrialMachinepark);
+        StatusClass = "alert-success";
+        Message = "Maskinen updaterades.";
+        Saved = true;
+    }
+
+    public async Task OnSendData()
+    {
+        if (SendData.HasDelegate)
+        {
+            await SendData.InvokeAsync(Text);
+        }
+    }
+}

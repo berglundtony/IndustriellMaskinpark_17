@@ -1,0 +1,32 @@
+[
+  {
+    "machinename": "Svets",
+    "machineid": "1",
+    "status": true,
+    "data": "Senaste data"
+  },
+  {
+    "machinename": "Svarv",
+    "machineid": "2",
+    "status": false,
+    "data": "Senaste data"
+  },
+  {
+    "machinename": "Halstansare",
+    "machineid": "3",
+    "status": true,
+    "data": "Senaste data"
+  },
+  {
+    "machinename": "angvalt",
+    "machineid": "4",
+    "status": true,
+    "data": "senaste data"
+  },
+  {
+    "machinename": "Sticksag",
+    "machineid": "5",
+    "status": true,
+    "data": "senaste data"
+  }
+]
