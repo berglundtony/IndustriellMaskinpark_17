@@ -23,10 +23,17 @@ namespace IndustriellMaskinpark_17.Services
             return await _httpClient.GetFromJsonAsync<List<IndustrialMachinepark>>("sample-data/machinepark.json");
         }
 
-        public async Task UpdateMachine(IndustrialMachinepark machine)
+        public async Task<HttpResponseMessage> UpdateMachine(IndustrialMachinepark machine)
         {
-            var mashineJson = new StringContent(JsonSerializer.Serialize(machine), Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync("api/maskinpark", mashineJson);
+            machine.Completed = machine.Completed ? false : true;
+            var response = await _httpClient.PutAsJsonAsync<IndustrialMachinepark>($"api/maskinpark/{machine.MachineId}", machine);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                machine.Completed = machine.Completed ? false : true;
+            }
+
+            return response;
         }
 
         public async Task<IndustrialMachinepark> AddMachine(IndustrialMachinepark machine)

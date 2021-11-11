@@ -1,14 +1,16 @@
 ﻿@page "/sendcommand/{MachineId}"
 
+
 <div class="form-group row">
     <EditForm Model="@IndustrialMachinepark" OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit">
         <div class="row">
             <div class="col-sm-12">
-                Data: <input type="text" id="Data" @bind="@Text" placeholder="Skriv data kommando">
+                Data: <InputText  type="text" @bind-Value="@IndustrialMachinepark.Data" placeholder="Skriv data kommando"></InputText>
+                      @*<InputText type="hidden" @bind-Value="@IndustrialMachinepark.MachineId"></InputText>*@
             </div>
         </div>
-        <button @onclick="OnSendData" class="btn btn-primary edit-btn">Spara kommando</button>
+        <button type="submit" @onclick="OnSendData" class="btn btn-primary edit-btn">Spara kommando</button>
     </EditForm>
 </div>
 
@@ -38,10 +40,11 @@
     protected async Task HandleValidSubmit()
     {
         Saved = false;
+        IndustrialMachinepark.MachineId = MachineId;
 
-        //await IndustrialMachineParkSevice.UpdateMachine(IndustrialMachinepark);
+        await IndustrialMachineParkSevice.UpdateMachine(IndustrialMachinepark);
         StatusClass = "alert-success";
-        Message = "Maskinen updaterades.";
+        Message = "Maskinens data updaterades.";
         Saved = true;
     }
 
@@ -52,4 +55,5 @@
             await SendData.InvokeAsync(Text);
         }
     }
+
 }
