@@ -12,5 +12,6 @@ namespace ForDevopsTests
             var b = 1;
             Assert.Equal(a, b);
         }
+
     }
 }
