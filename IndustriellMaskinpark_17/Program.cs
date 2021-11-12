@@ -19,7 +19,7 @@ namespace IndustriellMaskinpark_17
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:7071")});
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://industriellmaskinparkapi20211111181726.azurewebsites.net") });
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("DevCorsPolicy", builder =>
